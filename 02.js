@@ -10,7 +10,6 @@ class Cipher {
         this._encrypted = cipher.update(this._message, 'utf8', 'hex');
         this._encrypted += cipher.final('hex');
         return `Anyone without password can't read this message`;
-        // return `This is ${this._message}`;
     }
     decryptedMessage() {
         const decipher = crypto.createDecipher('aes256', this._password);
