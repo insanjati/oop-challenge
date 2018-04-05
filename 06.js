@@ -1,5 +1,5 @@
+// declare collection to save the data of instances
 let allUser = [];
-let userLoggedIn = [];
 
 class Auth {
     constructor(id, username, password) {
@@ -7,24 +7,39 @@ class Auth {
         this.username = username;
         this.password = password;
         this.isLoggedIn = false;
-    }
-    login(username, password) {
-        if (username === this.username && password === this.password) {
-            this.isLoggedIn = true;
-            userLoggedIn.push(this.username);
-            console.log(`${this.username} is logged in.`);
-        }
+        this.logDate = 0;
     }
     validate(username, password) {
         if (username === this.username && password === this.password) {
             console.log(`${this.username} account is verified`);
         }
     }
+    login(username, password) {
+        if (username === this.username && password === this.password) {
+            for (let i=0; i<allUser.length; i++) {
+                if (allUser[i].username === this.username) {
+                    allUser[i].isLoggedIn = true;
+                }
+            }
+            this.logDate = new Date();
+            console.log(`${this.username} is logged in.`);
+        }
+    }
     logout() {
-        let index = userLoggedIn.indexOf(this.username);
-        if (index > -1) { userLoggedIn.splice(index, 1); }
+        for (let i=0; i<allUser.length; i++) {
+            if (allUser[i].username === this.username) {
+                allUser[i].isLoggedIn = false;
+            }
+        }
+        console.log(`${this.username} is logged out.`);
     }
     user() {
+        let userLoggedIn = []
+        for (let i=0; i<allUser.length; i++) {
+            if (allUser[i].isLoggedIn) {
+                userLoggedIn.push(allUser[i].username);
+            }
+        }
         console.log(`current logged in users: ${userLoggedIn.join(', ')}`);
     }
     check() {
@@ -34,21 +49,46 @@ class Auth {
         console.log(!this.isLoggedIn);
     }
     lastLogin() {
-
+        console.log(this.logDate);
     }
 }
 
 // create instances
-const user = new Auth(1, 'root', 'secretsekaliini');
-const user2 = new Auth(2, 'branch', 'supersecret');
-const user3 = new Auth(3, 'twig', 'supersecretdong');
+const user = new Auth(1, 'root', 'supersecret');
+const user2 = new Auth(2, 'branch', 'supersecretbanget');
+const user3 = new Auth(3, 'twig', 'supersecretpokoknya');
+// push all instances to collection
 allUser.push(user, user2, user3);
+
+// validate user data
+user.validate('root', 'supersecret');
+user2.validate('branch', 'supersecretbanget');
+user3.validate(3, 'twig', 'supersecretpokoknya');
+
+// case login user
+user.login('root', 'supersecret');
+user2.login('branch', 'supersecretbanget');
+user3.login(3, 'twig', 'supersecretpokoknya');
 console.log(allUser);
 
-// Auth.login('root', 'secret');
-// user2.login('branch', 'supersecret');
+// check logged in user
+user.check()
+user2.check()
+user3.check()
+user.user();
 
-// user.user();
+// check last logged in
+user.lastLogin()
+user2.lastLogin()
+user3.lastLogin()
 
-// user2.check();
-// user2.guest();
+// check user status as guest
+user.guest();
+user2.guest();
+user3.guest();
+
+// logout
+user.logout();
+user2.logout();
+user3.logout();
+console.log(allUser);
